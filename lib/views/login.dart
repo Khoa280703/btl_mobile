@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home.dart'; // Import your HomePage widget
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -40,7 +41,7 @@ class LoginPage extends StatelessWidget {
                     SizedBox(height: screenHeight * 0.03), // Use relative height
                     _buildMXCN(),
                     SizedBox(height: screenHeight * 0.06), // Use relative height
-                    _buildLoginButton(),
+                    _buildLoginButton(context),
                   ],
                 ),
               ),
@@ -136,28 +137,38 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _buildLoginButton() {
-    return Container(
-      width: 300,
-      height: 60,
-      decoration: BoxDecoration(
-        color: const Color(0xFF72A6E9),
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+  Widget _buildLoginButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomePage(), // Replace with your actual page
           ),
-        ],
-      ),
-      child: const Center(
-        child: Text(
-          'Đăng nhập',
-          style: TextStyle(
-            color: Color(0xFF002660),
-            fontSize: 23,
-            fontWeight: FontWeight.w900,
+        );
+      },
+      child: Container(
+        width: 300,
+        height: 60,
+        decoration: BoxDecoration(
+          color: const Color(0xFF72A6E9),
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: const Center(
+          child: Text(
+            'Đăng nhập',
+            style: TextStyle(
+              color: Color(0xFF002660),
+              fontSize: 23,
+              fontWeight: FontWeight.w900,
+            ),
           ),
         ),
       ),
