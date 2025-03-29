@@ -7,18 +7,108 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home Page')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight, 
+            end: Alignment.bottomLeft,
+            colors: [
+              const Color(0x4BADD8E6), // Light blue with opacity
+              const Color(0xCCFFFFFF), // White with slight transparency
+              const Color(0x4BADD8E6), // Light blue again
+            ],
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            
+            const Spacer(),
+
+            // Image Button 1
+            _buildImageButton(
               context,
-              MaterialPageRoute(builder: (context) => const CameraPage()),
-            );
-          },
-          child: const Text('Camrera'),
+              'assets/images/tim_mat_phang.png', 
+              'TÌM MẶT PHẲNG',
+              () {
+                // Handle button tap
+              },
+            ),
+
+            const SizedBox(height: 20),
+
+            // Image Button 2
+            _buildImageButton(
+              context,
+              'assets/images/tim_hinh_anh.png',
+              'TÌM HÌNH ẢNH',
+              () {
+                // Handle button tap
+              },
+            ),
+
+            const Spacer(),
+
+            // Bottom Button
+            Container(
+              width: double.infinity,
+              color: const Color.fromRGBO(25, 94, 182,1), // Blue
+              child: TextButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                label: const Text(
+                  'CHỌN CÁCH HIỂN THỊ!',
+                  style: TextStyle(
+                    color: Colors.white, // Fixed invalid color
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
+
+Widget _buildImageButton(BuildContext context, String imagePath, String label, VoidCallback onTap) {
+  return SizedBox(
+    child: Column(
+      mainAxisSize: MainAxisSize.min, // <-- Prevents extra spacing
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10), 
+          child: Image.asset(
+            imagePath,
+            width: 241, // Same width as button
+            // height: 150,
+            fit: BoxFit.cover,
+          ),
+        ),
+        // REMOVE EXTRA SPACE
+          ElevatedButton(
+            onPressed: onTap,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromRGBO(25, 94, 182, 1), // Blue
+              minimumSize: const Size(250, 40), // Same width as image
+              padding: EdgeInsets.zero, // <-- Removes default padding
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4), // No border radius to remove spacing
+              ),
+            ),
+            child: Text(
+              label,
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+
+      ],
+    ),
+  );
+}
+
+
+
 }
