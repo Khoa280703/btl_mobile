@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ButtonPage extends StatelessWidget {
+class ButtonPage extends StatefulWidget {
+  @override
+  _ButtonPageState createState() => _ButtonPageState();
+}
+
+class _ButtonPageState extends State<ButtonPage> {
+  String _selectedButton = ''; // Stores the currently selected button
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,12 +18,11 @@ class ButtonPage extends StatelessWidget {
             // Full-screen background image
             Positioned.fill(
               child: Image.asset(
-                'assets/images/anh_da_den_high_five.png', // Change this to your actual image
-                fit: BoxFit.cover, // Make the image cover the whole screen
+                'assets/images/anh_da_den_high_five.png',
+                fit: BoxFit.cover,
               ),
             ),
 
-            // Overlay content
             Column(
               children: [
                 const SizedBox(height: 20),
@@ -29,48 +35,56 @@ class ButtonPage extends StatelessWidget {
                     children: [
                       Container(
                         decoration: const BoxDecoration(
-                          color: Colors.white, // Background color
-                          shape: BoxShape.circle, // Circular shape
+                          color: Colors.white,
+                          shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          icon:
-                              const Icon(Icons.settings, color: Colors.black54),
-                          iconSize: 30, // Adjust icon size
-                          splashRadius: 24, // Ripple effect size
-                          onPressed: () {
-                            // Handle settings action
-                          },
+                          icon: const Icon(Icons.settings, color: Colors.black54),
+                          iconSize: 30,
+                          splashRadius: 24,
+                          onPressed: () {},
                         ),
                       ),
                     ],
                   ),
                 ),
 
+                const Spacer(),
 
-                // Horizontal button list with semi-transparent background
+                // First row of buttons (Centered)
                 Container(
-                  height: 50, // Set the height of the container
-                  color: Colors.grey
-                      .withOpacity(0.5), // Gray background with opacity
-                  padding: EdgeInsets.symmetric(vertical: 10),
+                  height: 50,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Align(
-                    alignment:
-                        Alignment.center, // Center buttons inside the container
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildRoundButton('Info'),
+                        const SizedBox(width: 10),
+                        _buildRoundButton('Practice'),
+                        const SizedBox(width: 10),
+                        _buildRoundButton('...'),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Second row of buttons (Scrollable)
+                Container(
+                  height: 50,
+                  color: Colors.grey.withOpacity(0.5),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Align(
+                    alignment: Alignment.center,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       children: [
-                        _buildRoundButton('Info', Colors.white, Colors.black),
-                        _buildRoundButton(
-                            'Practice', Colors.blue, Colors.white),
-                        _buildRoundButton('...', Colors.white, Colors.black),
-                        _buildRoundButton(
-                            'Bản thực hành', Colors.white, Colors.black),
-                        _buildRoundButton(
-                            'Bộ Điện Di', Colors.white, Colors.black),
-                        _buildRoundButton('Tủ Mát', Colors.white, Colors.black),
-                        _buildRoundButton(
-                            'Tủ Thao Tác', Colors.white, Colors.black),
+                        _buildRoundButton('Bản thực hành'),
+                        _buildRoundButton('Bộ Điện Di'),
+                        _buildRoundButton('Tủ Mát'),
+                        _buildRoundButton('Tủ Thao Tác'),
                       ],
                     ),
                   ),
@@ -79,7 +93,7 @@ class ButtonPage extends StatelessWidget {
                 // Bottom navigation button
                 Container(
                   width: double.infinity,
-                  color: const Color.fromRGBO(25, 94, 182, 1), // Blue
+                  color: const Color.fromRGBO(25, 94, 182, 1),
                   child: TextButton.icon(
                     onPressed: () {
                       Navigator.pop(context);
@@ -94,8 +108,6 @@ class ButtonPage extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 10),
               ],
             ),
           ],
@@ -104,31 +116,36 @@ class ButtonPage extends StatelessWidget {
     );
   }
 
-  Widget _buildRoundButton(String label, Color bgColor, Color textColor) {
+  // Button Builder
+  Widget _buildRoundButton(String label) {
+    bool isSelected = _selectedButton == label; // Check if the button is selected
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: ConstrainedBox(
         constraints: const BoxConstraints(
-          minHeight: 30, // Minimum height to keep the button short
-          maxHeight: 30, // Maximum height to prevent it from expanding
+          minHeight: 30,
+          maxHeight: 30,
         ),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            setState(() {
+              _selectedButton = label; // Update the selected button
+            });
+          },
           style: ElevatedButton.styleFrom(
-            backgroundColor: bgColor,
-            foregroundColor: textColor,
-            padding: const EdgeInsets.symmetric(
-                horizontal: 12), // Keep padding only for width
+            backgroundColor: isSelected ? Colors.blue : Colors.white, // Change color
+            foregroundColor: isSelected ? Colors.white : Colors.black, // Change text color
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.circular(25), // Increased border radius
+              borderRadius: BorderRadius.circular(25),
             ),
           ),
           child: Text(
             label,
             style: const TextStyle(
               fontSize: 14,
-              fontWeight: FontWeight.bold, // Make text bold
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
