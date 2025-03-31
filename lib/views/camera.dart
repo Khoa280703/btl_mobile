@@ -142,6 +142,72 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
+
+  int? selectedTuyChinhButtonIndex;
+
+  final List<Color> initialColors = [
+    Colors.blue,
+    Colors.blue,
+    Colors.blue,
+    Colors.blue, // Right-side button 1
+    Colors.blue, // Right-side button 2
+  ];
+
+  final List<IconData?> icons = [
+    Icons.track_changes,
+    Icons.center_focus_strong,
+    Icons.location_on,
+    Icons.settings, // Right-side button 1
+    Icons.info, // Right-side button 2
+  ];
+
+  final List<Function> actions = [
+    () {
+      // Action for button 1
+      print('Button 1 pressed');
+    },
+    () {
+      // Action for button 2
+      print('Button 2 pressed');
+    },
+    () {
+      // Action for button 4
+      print('Button 4 pressed');
+    },
+    () {
+      // Action for right-side button 1
+      print('Right-side button 1 pressed');
+    },
+    () {
+      // Action for right-side button 2
+      print('Right-side button 2 pressed');
+    },
+  ];
+
+  Widget _buildTuyChinhButton(int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedTuyChinhButtonIndex = index;
+        });
+        actions[index](); // Call the action associated with the button
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: CircleAvatar(
+          radius: 20,
+          backgroundColor:
+              selectedTuyChinhButtonIndex == index ? Colors.yellow : initialColors[index],
+          child: icons[index] != null
+              ? Icon(icons[index], color: Colors.black)
+              : null,
+        ),
+      ),
+    );
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -156,126 +222,117 @@ class _CameraPageState extends State<CameraPage> {
                   right: 0,
                   height: screenSize.height,
                   // child: CameraPreview(_cameraController),
-                  child: SafeArea(
-                    child: Stack(
-                      children: [
-                        // Full-screen background image
-                        Positioned.fill(
-                          child: Image.asset(
-                            'assets/images/anh_da_den_high_five.png',
-                            fit: BoxFit.cover,
-                          ),
+                  child: Stack(
+                    children: [
+                      // Full-screen background image
+                      Positioned.fill(
+                        child: Image.asset(
+                          'assets/images/anh_da_den_high_five.png',
+                          fit: BoxFit.cover,
                         ),
+                      ),
 
-                        Column(
-                          children: [
-                            // Top bar with seRttings icon
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                      Column(
+                        children: [
+                          const Spacer(),
+                          // First row of buttons (Centered)
+                          Container(
+                            height: 50,
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Align(
+                              alignment: Alignment.center,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: IconButton(
-                                      icon: const Icon(Icons.settings,
-                                          color: Colors.black54),
-                                      iconSize: 30,
-                                      splashRadius: 24,
-                                      onPressed: () {},
-                                    ),
-                                  ),
+                                  _buildRoundButton('Info'),
+                                  const SizedBox(width: 10),
+                                  _buildRoundButton('Practice'),
+                                  const SizedBox(width: 10),
+                                  _buildRoundButton('...'),
                                 ],
                               ),
                             ),
+                          ),
 
-                            const Spacer(),
+                          // Second row of buttons (Scrollable)
+                          Container(
+                            height: 50,
+                            color: Colors.grey.withOpacity(0.5),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                children: [
+                                  _buildRoundButton('Bản thực hành'),
+                                  _buildRoundButton('Bộ Điện Di'),
+                                  _buildRoundButton('Tủ Mát'),
+                                  _buildRoundButton('Tủ Thao Tác'),
+                                ],
+                              ),
+                            ),
+                          ),
 
-                            // First row of buttons (Centered)
-                            Container(
-                              height: 50,
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    _buildRoundButton('Info'),
-                                    const SizedBox(width: 10),
-                                    _buildRoundButton('Practice'),
-                                    const SizedBox(width: 10),
-                                    _buildRoundButton('...'),
-                                  ],
+                          // Bottom navigation button
+                          Container(
+                            width: double.infinity,
+                            color: const Color.fromRGBO(25, 94, 182, 1),
+                            child: TextButton.icon(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.arrow_back,
+                                  color: Colors.white),
+                              label: const Text(
+                                'MÀN HÌNH CHÍNH',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-
-                            // Second row of buttons (Scrollable)
-                            Container(
-                              height: 50,
-                              color: Colors.grey.withOpacity(0.5),
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  children: [
-                                    _buildRoundButton('Bản thực hành'),
-                                    _buildRoundButton('Bộ Điện Di'),
-                                    _buildRoundButton('Tủ Mát'),
-                                    _buildRoundButton('Tủ Thao Tác'),
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            // Bottom navigation button
-                            Container(
-                              width: double.infinity,
-                              color: const Color.fromRGBO(25, 94, 182, 1),
-                              child: TextButton.icon(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: const Icon(Icons.arrow_back,
-                                    color: Colors.white),
-                                label: const Text(
-                                  'MÀN HÌNH CHÍNH',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                // Positioned(
-                //   top: 0,
-                //   left: 0,
-                //   right: 0,
-                //   height: screenSize.height,
-                //   // child: CameraPreview(_cameraController),
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       Container(
-                //         padding: const EdgeInsets.all(16.0),
-                //         child: TuyChinhButtons(), // Add the button list here
-                //       ),
-                //     ],
-                //   ),
-                // ),
+                Positioned(
+                  top: 15,
+                  left: 0,
+                  right: 0,
+                  height: screenSize.height,
+                  // child: CameraPreview(_cameraController),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Left column of buttons
+                            Column(
+                              children: List.generate(3, (index) {
+                                return _buildTuyChinhButton(index);
+                              }),
+                            ),
+                            const Spacer(), // Push right-side buttons to the right
+                            // Right column of buttons
+                            Column(
+                              children: List.generate(2, (index) {
+                                return _buildTuyChinhButton(
+                                    index + 3); // Offset to right-side buttons
+                              }),
+                            ),
+                          ],
+                        ), // Add the button list here
+                      ),
+                    ],
+                  ),
+                ),
                 Positioned(
                   left: _elementPosition.dx,
                   top: _elementPosition.dy,
