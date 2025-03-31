@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/views/tuy_chinh_page.dart';
 import 'button_page.dart'; // Import your ButtonPage widget
 import 'camera.dart'; // Import your CameraPage widget
 
@@ -52,6 +53,7 @@ class HomePage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const CameraPage(),
+                    // builder:(context)=>  TuyChinhPage(),
                   ),
                 );
               },

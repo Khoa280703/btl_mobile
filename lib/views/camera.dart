@@ -2,10 +2,14 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:mobile/views/tuy_chinh_page.dart';
 import '../components/element.dart';
 import '../components/element_scale.dart';
 import '../components/camera_zoom.dart';
 import '../components/joystick.dart';
+
+import './button_page.dart';
+import './tuy_chinh_page.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -109,8 +113,33 @@ class _CameraPageState extends State<CameraPage> {
                   top: 0,
                   left: 0,
                   right: 0,
-                  height: screenSize.height * 0.9,
-                  child: CameraPreview(_cameraController),
+                  height: screenSize.height,
+                  // child: CameraPreview(_cameraController),
+                  child: ButtonPage(),
+                ),
+                Positioned(
+                  top: 5,
+                  left: 0,
+                  right: 0,
+                  height: screenSize.height,
+                  // child: CameraPreview(_cameraController),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "items",
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        padding: const EdgeInsets.all(16.0),
+                        child: TuyChinhButtons(), // Add the button list here
+                      ),
+                    ],
+                  ),
                 ),
                 Positioned(
                   left: _elementPosition.dx,
