@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'button_page.dart'; // Import your ButtonPage widget
 import 'camera.dart';
 
 class HomePage extends StatelessWidget {
@@ -31,7 +32,12 @@ class HomePage extends StatelessWidget {
               'assets/images/tim_mat_phang.png', 
               'TÌM MẶT PHẲNG',
               () {
-                // Handle button tap
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>  ButtonPage(),
+                  ),
+                );
               },
             ),
 
