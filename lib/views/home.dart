@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'camera.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -10,10 +11,12 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            // Navigate back to Login Page
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CameraPage()),
+            );
           },
-          child: const Text('Logout'),
+          child: const Text('Camrera'),
         ),
       ),
     );

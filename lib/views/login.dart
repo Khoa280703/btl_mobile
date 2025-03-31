@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home.dart'; // Import your HomePage widget
+import 'home.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -24,7 +24,7 @@ class LoginPage extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: screenHeight * 0.2,
+            top: screenHeight * 0.15,
             left: (screenWidth - 240) / 2,
             child: Image.asset(
               'assets/images/BIOTECH.png',
