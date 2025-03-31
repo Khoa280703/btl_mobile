@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'button_page.dart'; // Import your ButtonPage widget
-import 'camera.dart';
+import 'camera.dart'; // Import your CameraPage widget
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topRight, 
+            begin: Alignment.topRight,
             end: Alignment.bottomLeft,
             colors: [
               const Color(0x4BADD8E6), // Light blue with opacity
@@ -23,19 +23,18 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            
             const Spacer(),
 
             // Image Button 1
             _buildImageButton(
               context,
-              'assets/images/tim_mat_phang.png', 
+              'assets/images/tim_mat_phang.png',
               'TÌM MẶT PHẲNG',
               () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>  ButtonPage(),
+                    builder: (context) => ButtonPage(),
                   ),
                 );
               },
@@ -49,7 +48,12 @@ class HomePage extends StatelessWidget {
               'assets/images/tim_hinh_anh.png',
               'TÌM HÌNH ẢNH',
               () {
-                // Handle button tap
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CameraPage(),
+                  ),
+                );
               },
             ),
 
@@ -58,7 +62,7 @@ class HomePage extends StatelessWidget {
             // Bottom Button
             Container(
               width: double.infinity,
-              color: const Color.fromRGBO(25, 94, 182,1), // Blue
+              color: const Color.fromRGBO(25, 94, 182, 1), // Blue
               child: TextButton.icon(
                 onPressed: () {
                   Navigator.pop(context);
@@ -79,21 +83,21 @@ class HomePage extends StatelessWidget {
     );
   }
 
-Widget _buildImageButton(BuildContext context, String imagePath, String label, VoidCallback onTap) {
-  return SizedBox(
-    child: Column(
-      mainAxisSize: MainAxisSize.min, // <-- Prevents extra spacing
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10), 
-          child: Image.asset(
-            imagePath,
-            width: 241, // Same width as button
-            // height: 150,
-            fit: BoxFit.cover,
+  Widget _buildImageButton(BuildContext context, String imagePath, String label, VoidCallback onTap) {
+    return SizedBox(
+      child: Column(
+        mainAxisSize: MainAxisSize.min, // <-- Prevents extra spacing
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
+              imagePath,
+              width: 241, // Same width as button
+              // height: 150,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        // REMOVE EXTRA SPACE
+          // REMOVE EXTRA SPACE
           ElevatedButton(
             onPressed: onTap,
             style: ElevatedButton.styleFrom(
@@ -109,12 +113,8 @@ Widget _buildImageButton(BuildContext context, String imagePath, String label, V
               style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
-
-      ],
-    ),
-  );
-}
-
-
-
+        ],
+      ),
+    );
+  }
 }
