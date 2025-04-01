@@ -46,7 +46,7 @@ class _ElementScaleSliderState extends State<ElementScaleSlider> {
       width: 50,
       height: 120,
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.5),
+        color: Colors.black.withAlpha((0.5 * 255).toInt()),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Stack(

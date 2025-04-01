@@ -21,7 +21,7 @@ class CameraZoomControls extends StatelessWidget {
           onPressed: onZoomOut,
           icon: const Icon(Icons.remove, color: Colors.white),
           style: IconButton.styleFrom(
-            backgroundColor: Colors.black.withOpacity(0.5),
+            backgroundColor: Colors.black.withAlpha((0.5 * 255).toInt()),
           ),
         ),
         Padding(
@@ -35,7 +35,7 @@ class CameraZoomControls extends StatelessWidget {
           onPressed: onZoomIn,
           icon: const Icon(Icons.add, color: Colors.white),
           style: IconButton.styleFrom(
-            backgroundColor: Colors.black.withOpacity(0.5),
+            backgroundColor: Colors.black.withAlpha((0.5 * 255).toInt()),
           ),
         ),
       ],
