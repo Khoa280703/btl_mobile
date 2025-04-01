@@ -15,7 +15,8 @@ class EditPage extends StatefulWidget {
   State<EditPage> createState() => _EditPageState();
 }
 
-class _EditPageState extends State<EditPage> with SingleTickerProviderStateMixin {
+class _EditPageState extends State<EditPage>
+    with SingleTickerProviderStateMixin {
   late CameraController _cameraController;
   bool _isCameraReady = false;
   bool _isLoading = false;
@@ -35,6 +36,13 @@ class _EditPageState extends State<EditPage> with SingleTickerProviderStateMixin
   late Animation<double> _scanAnimation;
   String _selectedButton = '';
   int? selectedCustomButtonIndex;
+
+  Map activeMap = {
+    'camera': false,
+    'scan': false,
+    'location': false,
+    'info': false,
+  };
 
   @override
   void initState() {
@@ -155,18 +163,13 @@ class _EditPageState extends State<EditPage> with SingleTickerProviderStateMixin
     });
     if (_isScanning) {
       _scanAnimationController.stop();
-      setState(() {
-        _cameraMode = false;
-      });
     } else {
       _scanAnimationController.forward();
-      setState(() {
-        _cameraMode = true;
-      });
     }
     setState(() {
       _isScanning = !_isScanning;
       _isLoading = false;
+      activeMap['scan'] = _isScanning;
     });
   }
 
@@ -230,28 +233,14 @@ class _EditPageState extends State<EditPage> with SingleTickerProviderStateMixin
                                 )
                               : CameraPreview(_cameraController),
                         ),
-                        if (_isScanning)
-                          AnimatedBuilder(
-                            animation: _scanAnimation,
-                            builder: (context, child) {
-                              return Positioned(
-                                top: _scanAnimation.value * screenSize.height,
-                                left: 0,
-                                right: 0,
-                                child: Container(
-                                  height: 2,
-                                  color: Colors.red.withAlpha((0.7 * 255).toInt()),
-                                ),
-                              );
-                            },
-                          ),
                         Column(
                           children: [
                             const Spacer(),
                             if (!_isScanning)
                               Container(
                                 height: 50,
-                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Row(
@@ -269,13 +258,16 @@ class _EditPageState extends State<EditPage> with SingleTickerProviderStateMixin
                             if (!_isScanning)
                               Container(
                                 height: 50,
-                                color: Colors.grey.withAlpha((0.5 * 255).toInt()),
-                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                color:
+                                    Colors.grey.withAlpha((0.5 * 255).toInt()),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: ListView(
                                     scrollDirection: Axis.horizontal,
-                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
                                     children: [
                                       _buildRoundButton('Bản thực hành'),
                                       _buildRoundButton('Bộ Điện Di'),
@@ -294,7 +286,8 @@ class _EditPageState extends State<EditPage> with SingleTickerProviderStateMixin
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                                      icon: const Icon(Icons.arrow_back,
+                                          color: Colors.white),
                                       label: const Text(
                                         'MÀN HÌNH CHÍNH',
                                         style: TextStyle(
@@ -304,11 +297,14 @@ class _EditPageState extends State<EditPage> with SingleTickerProviderStateMixin
                                       ),
                                     )
                                   : Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: Text(
-                                          _isScanning ? 'ĐANG QUÉT' : 'CHẾ ĐỘ CHỈNH SỬA',
+                                          _isScanning
+                                              ? 'ĐANG QUÉT'
+                                              : 'CHẾ ĐỘ CHỈNH SỬA',
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -338,33 +334,53 @@ class _EditPageState extends State<EditPage> with SingleTickerProviderStateMixin
                               Column(
                                 children: [
                                   CustomButton(
-                                    icon: Icons.track_changes,
-                                    label: "Chế độ",
-                                    isSelected: selectedCustomButtonIndex == 0,
-                                    onPress: () async {
-                                      await _toggleScanningMode();
-                                    },
-                                  ),
-                                  CustomButton(
-                                    icon: Icons.center_focus_strong,
-                                    label: "Focus",
-                                    isSelected: selectedCustomButtonIndex == 1,
-                                    onPress: () {
-                                      setState(() {
-                                        selectedCustomButtonIndex = 1;
-                                      });
-                                    },
-                                  ),
-                                  CustomButton(
                                     icon: Icons.location_on,
                                     label: "Location",
-                                    isSelected: selectedCustomButtonIndex == 2,
+                                    isSelected: activeMap['location'] ?? false,
                                     onPress: () {
                                       setState(() {
-                                        selectedCustomButtonIndex = 2;
+                                        activeMap['location'] =
+                                            !activeMap['location']!;
                                       });
                                     },
                                   ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(width: 10),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          await _toggleCameraMode();
+                                        },
+                                        child: Icon(
+                                          _cameraMode
+                                              ? Icons.camera_alt
+                                              : Icons.camera,
+                                          color: _cameraMode
+                                              ? Colors.blue
+                                              : Colors.grey,
+                                          size: 30,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Text(
+                                        'Camera',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  if (_cameraMode)
+                                    CustomButton(
+                                      icon: Icons.center_focus_strong,
+                                      label: "Scan",
+                                      isSelected: activeMap['scan'] ?? false,
+                                      onPress: () async {
+                                        await _toggleScanningMode();
+                                      },
+                                    ),
                                 ],
                               ),
                               const Spacer(),
@@ -381,7 +397,6 @@ class _EditPageState extends State<EditPage> with SingleTickerProviderStateMixin
                                         onChanged: (bool value) {
                                           setState(() {
                                             _editMode = value;
-                                            selectedCustomButtonIndex = value ? 3 : -1;
                                           });
                                         },
                                       ),
@@ -394,37 +409,13 @@ class _EditPageState extends State<EditPage> with SingleTickerProviderStateMixin
                                       ),
                                     ],
                                   ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(width: 10),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          await _toggleCameraMode();
-                                        },
-                                        child: Icon(
-                                          _cameraMode ? Icons.camera_alt : Icons.camera,
-                                          color: _cameraMode ? Colors.blue : Colors.white,
-                                          size: 30,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      const Text(
-                                        'Camera',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                   CustomButton(
                                     icon: Icons.info,
                                     label: "Info",
-                                    isSelected: selectedCustomButtonIndex == 5,
+                                    isSelected: activeMap['info'] ?? false,
                                     onPress: () {
                                       setState(() {
-                                        selectedCustomButtonIndex = 5;
+                                        activeMap['info'] = !activeMap['info']!;
                                       });
                                     },
                                   ),
@@ -467,7 +458,22 @@ class _EditPageState extends State<EditPage> with SingleTickerProviderStateMixin
                           ),
                         ],
                       ),
-                    )
+                    ),
+                  if (_isScanning)
+                    AnimatedBuilder(
+                      animation: _scanAnimation,
+                      builder: (context, child) {
+                        return Positioned(
+                          top: _scanAnimation.value * screenSize.height,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            height: 2,
+                            color: Colors.red.withAlpha((0.7 * 255).toInt()),
+                          ),
+                        );
+                      },
+                    ),
                 ],
               ));
   }
