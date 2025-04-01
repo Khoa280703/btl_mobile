@@ -6,8 +6,7 @@ import '../components/element.dart';
 import '../components/element_scale.dart';
 import '../components/camera_zoom.dart';
 import '../components/joystick.dart';
-import '../components//custom_button.dart';
-import './scan_page.dart';
+import '../components/custom_button.dart';
 
 class EditPage extends StatefulWidget {
   const EditPage({super.key});
@@ -16,10 +15,10 @@ class EditPage extends StatefulWidget {
   State<EditPage> createState() => _EditPageState();
 }
 
-class _EditPageState extends State<EditPage> {
+class _EditPageState extends State<EditPage> with SingleTickerProviderStateMixin {
   late CameraController _cameraController;
   bool _isCameraReady = false;
-  bool _isLoading = false; // Flag for loading state
+  bool _isLoading = false;
 
   Offset _elementPosition = const Offset(150, 300);
   double _elementScale = 1.0;
@@ -32,7 +31,8 @@ class _EditPageState extends State<EditPage> {
   bool _editMode = false;
   bool _cameraMode = false;
   bool _isScanning = false;
-
+  late AnimationController _scanAnimationController;
+  late Animation<double> _scanAnimation;
   String _selectedButton = '';
   int? selectedCustomButtonIndex;
 
@@ -41,11 +41,12 @@ class _EditPageState extends State<EditPage> {
     super.initState();
     _initializeCamera();
     _listenForVolumeKeys();
+    _initializeScanAnimation();
   }
 
   Future<void> _initializeCamera() async {
     setState(() {
-      _isLoading = true; // Set loading to true before starting async operation
+      _isLoading = true;
     });
 
     final cameras = await availableCameras();
@@ -66,6 +67,7 @@ class _EditPageState extends State<EditPage> {
   @override
   void dispose() {
     _cameraController.dispose();
+    _scanAnimationController.dispose();
     super.dispose();
   }
 
@@ -111,13 +113,35 @@ class _EditPageState extends State<EditPage> {
     });
   }
 
+  void _initializeScanAnimation() {
+    _scanAnimationController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+
+    _scanAnimation = Tween<double>(begin: 0.0, end: 0.9).animate(
+      CurvedAnimation(
+        parent: _scanAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    // Make animation repeat up and down
+    _scanAnimationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _scanAnimationController.reverse();
+      } else if (status == AnimationStatus.dismissed) {
+        _scanAnimationController.forward();
+      }
+    });
+  }
+
   Future<void> _toggleCameraMode() async {
     setState(() {
       _isLoading = true;
     });
-
     if (!_cameraMode) {
-      await _initializeCamera();
+      _isScanning = false;
     }
     setState(() {
       _cameraMode = !_cameraMode;
@@ -129,9 +153,16 @@ class _EditPageState extends State<EditPage> {
     setState(() {
       _isLoading = true;
     });
-
     if (_isScanning) {
-      await _cameraController.dispose();
+      _scanAnimationController.stop();
+      setState(() {
+        _cameraMode = false;
+      });
+    } else {
+      _scanAnimationController.forward();
+      setState(() {
+        _cameraMode = true;
+      });
     }
     setState(() {
       _isScanning = !_isScanning;
@@ -197,53 +228,68 @@ class _EditPageState extends State<EditPage> {
                                   'assets/images/anh_da_den_high_five.png',
                                   fit: BoxFit.cover,
                                 )
-                              : _isScanning
-                                  ? const SimpleScanCameraPage(displayBottom: false)
-                                  : CameraPreview(_cameraController),
+                              : CameraPreview(_cameraController),
                         ),
+                        if (_isScanning)
+                          AnimatedBuilder(
+                            animation: _scanAnimation,
+                            builder: (context, child) {
+                              return Positioned(
+                                top: _scanAnimation.value * screenSize.height,
+                                left: 0,
+                                right: 0,
+                                child: Container(
+                                  height: 2,
+                                  color: Colors.red.withAlpha((0.7 * 255).toInt()),
+                                ),
+                              );
+                            },
+                          ),
                         Column(
                           children: [
                             const Spacer(),
-                            Container(
-                              height: 50,
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    _buildRoundButton('Info'),
-                                    const SizedBox(width: 10),
-                                    _buildRoundButton('Practice'),
-                                    const SizedBox(width: 10),
-                                    _buildRoundButton('...'),
-                                  ],
+                            if (!_isScanning)
+                              Container(
+                                height: 50,
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      _buildRoundButton('Info'),
+                                      const SizedBox(width: 10),
+                                      _buildRoundButton('Practice'),
+                                      const SizedBox(width: 10),
+                                      _buildRoundButton('...'),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              height: 50,
-                              color: Colors.grey.withAlpha((0.5 * 255).toInt()),
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                                  children: [
-                                    _buildRoundButton('Bản thực hành'),
-                                    _buildRoundButton('Bộ Điện Di'),
-                                    _buildRoundButton('Tủ Mát'),
-                                    _buildRoundButton('Tủ Thao Tác'),
-                                  ],
+                            if (!_isScanning)
+                              Container(
+                                height: 50,
+                                color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    children: [
+                                      _buildRoundButton('Bản thực hành'),
+                                      _buildRoundButton('Bộ Điện Di'),
+                                      _buildRoundButton('Tủ Mát'),
+                                      _buildRoundButton('Tủ Thao Tác'),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
                             Container(
                               width: double.infinity,
                               height: 50,
                               color: const Color.fromRGBO(25, 94, 182, 1),
-                              child: !_editMode
+                              child: (!_editMode && !_isScanning)
                                   ? TextButton.icon(
                                       onPressed: () {
                                         Navigator.pop(context);
@@ -259,11 +305,11 @@ class _EditPageState extends State<EditPage> {
                                     )
                                   : Container(
                                       padding: const EdgeInsets.symmetric(vertical: 10),
-                                      child: const Align(
+                                      child: Align(
                                         alignment: Alignment.center,
                                         child: Text(
-                                          'CHẾ ĐỘ CHỈNH SỬA',
-                                          style: TextStyle(
+                                          _isScanning ? 'ĐANG QUÉT' : 'CHẾ ĐỘ CHỈNH SỬA',
+                                          style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                           ),
