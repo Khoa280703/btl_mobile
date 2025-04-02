@@ -23,6 +23,7 @@ class _EditPageState extends State<EditPage>
 
   Offset _elementPosition = const Offset(150, 300);
   double _elementScale = 1.0;
+  late String _element='';
   double _zoomLevel = 1.0;
   final double _minZoom = 1.0;
   final double _maxZoom = 4.0;
@@ -173,7 +174,7 @@ class _EditPageState extends State<EditPage>
     });
   }
 
-  Widget _buildRoundButton(String label) {
+  Widget _buildRoundButton(String label,Function onTap) {
     bool isSelected = _selectedButton == label;
 
     return Padding(
@@ -188,6 +189,7 @@ class _EditPageState extends State<EditPage>
             setState(() {
               _selectedButton = label;
             });
+            onTap();
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: isSelected ? Colors.blue : Colors.white,
@@ -246,11 +248,11 @@ class _EditPageState extends State<EditPage>
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      _buildRoundButton('Info'),
+                                      _buildRoundButton('Info',()=>{}),
                                       const SizedBox(width: 10),
-                                      _buildRoundButton('Practice'),
+                                      _buildRoundButton('Practice',()=>{}),
                                       const SizedBox(width: 10),
-                                      _buildRoundButton('...'),
+                                      _buildRoundButton('...',()=>{}),
                                     ],
                                   ),
                                 ),
@@ -269,10 +271,30 @@ class _EditPageState extends State<EditPage>
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10),
                                     children: [
-                                      _buildRoundButton('Bản thực hành'),
-                                      _buildRoundButton('Bộ Điện Di'),
-                                      _buildRoundButton('Tủ Mát'),
-                                      _buildRoundButton('Tủ Thao Tác'),
+                                      _buildRoundButton('Công tắc 1',()=>{setState(() {
+                                        _element = 'switch';
+                                      })}),
+                                      _buildRoundButton('Công tắc 2',()=>{setState(() {
+                                        _element = 'switch2';
+                                      })}),
+                                      _buildRoundButton('Công tắc 3',()=>{setState(() {
+                                        _element = 'switch3';
+                                      })}),
+                                      _buildRoundButton('Công tắc 4',()=>{setState(() {
+                                        _element = 'switch4';
+                                      })}),
+                                      _buildRoundButton('Knob',()=>{setState(() {
+                                        _element = 'knob';
+                                      })}),
+                                      _buildRoundButton('Ledid',()=>{setState(() {
+                                        _element = 'ledit';
+                                      })}),
+                                      _buildRoundButton('Meter',()=>{setState(() {
+                                        _element = 'meter';
+                                      })}),
+                                      _buildRoundButton('Bộ Điện Di',()=>{}),
+                                      _buildRoundButton('Tủ Mát',()=>{}),
+                                      _buildRoundButton('Tủ Thao Tác',()=>{}),
                                     ],
                                   ),
                                 ),
@@ -430,7 +452,7 @@ class _EditPageState extends State<EditPage>
                   Positioned(
                     left: _elementPosition.dx,
                     top: _elementPosition.dy,
-                    child: CustomElement(scale: _elementScale),
+                    child: CustomElement(scale: _elementScale,element: _element),
                   ),
                   if (_editMode)
                     Positioned(
