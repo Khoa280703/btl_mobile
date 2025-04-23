@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _personalIdController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _personalIdController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +42,7 @@ class LoginPage extends StatelessWidget {
             top: screenHeight * 0.15,
             left: (screenWidth - 240) / 2,
             child: Image.asset(
-              'assets/images/BIOTECH.png',
+              'assets/images/HCMCUT.png',
               width: 240,
               height: 240,
               fit: BoxFit.cover,
@@ -41,7 +56,7 @@ class LoginPage extends StatelessWidget {
           Positioned(
             top: screenHeight * 0.65,
             left: (screenWidth - 320) / 2,
-            child: _buildMXCN(),
+            child: _buildPersonalIdField(),
           ),
           Positioned(
             top: screenHeight * 0.78,
@@ -75,31 +90,52 @@ class LoginPage extends StatelessWidget {
       width: 320,
       height: 60,
       decoration: _inputDecoration(),
-      child: const Center(
-        child: Text(
-          'Email',
-          style: TextStyle(
-            color: Color(0xFF888888),
-            fontSize: 25,
-            fontWeight: FontWeight.w400,
+      child: Center(
+        child: TextField(
+          controller: _emailController,
+          style: const TextStyle(
+            fontSize: 22,
+            color: Color(0xFF333333),
           ),
+          textAlign: TextAlign.center,
+          decoration: const InputDecoration(
+            hintText: 'Email',
+            hintStyle: TextStyle(
+              color: Color(0xFF888888),
+              fontSize: 25,
+              fontWeight: FontWeight.w400,
+            ),
+            border: InputBorder.none,
+            isCollapsed: true,
+          ),
+          keyboardType: TextInputType.emailAddress,
         ),
       ),
     );
   }
 
-  Widget _buildMXCN() {
+  Widget _buildPersonalIdField() {
     return Container(
       width: 320,
       height: 60,
       decoration: _inputDecoration(),
-      child: const Center(
-        child: Text(
-          'Mã số cá nhân',
-          style: TextStyle(
-            color: Color(0xFF888888),
-            fontSize: 25,
-            fontWeight: FontWeight.w400,
+      child: Center(
+        child: TextField(
+          controller: _personalIdController,
+          style: const TextStyle(
+            fontSize: 22,
+            color: Color(0xFF333333),
+          ),
+          textAlign: TextAlign.center,
+          decoration: const InputDecoration(
+            hintText: 'Mã số cá nhân',
+            hintStyle: TextStyle(
+              color: Color(0xFF888888),
+              fontSize: 25,
+              fontWeight: FontWeight.w400,
+            ),
+            border: InputBorder.none,
+            isCollapsed: true,
           ),
         ),
       ),
@@ -109,12 +145,23 @@ class LoginPage extends StatelessWidget {
   Widget _buildLoginButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomePage(),
-          ),
-        );
+        // You can add validation here before navigating
+        if (_emailController.text.isNotEmpty && _personalIdController.text.isNotEmpty) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomePage(),
+            ),
+          );
+        } else {
+          // Show error message if fields are empty
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Vui lòng nhập Email và Mã số cá nhân'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       },
       child: Container(
         width: 300,

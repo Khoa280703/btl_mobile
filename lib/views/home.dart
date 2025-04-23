@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'edit_page.dart';
 import './scan_page.dart';
+import 'web_view.dart';
+import 'google.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -50,6 +52,37 @@ class HomePage extends StatelessWidget {
                   ),
                 );
               },
+            ),
+            const SizedBox(height: 20),
+            _buildImageButton(
+              context,
+              'assets/images/CSE.png',
+              'LMS',
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const YoutubePage(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GooglePage(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.search, size: 40),
+              style: IconButton.styleFrom(
+                backgroundColor: const Color.fromRGBO(25, 94, 182, 1),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.all(16),
+              ),
             ),
             const Spacer(),
             Container(

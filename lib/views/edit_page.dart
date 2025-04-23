@@ -15,15 +15,14 @@ class EditPage extends StatefulWidget {
   State<EditPage> createState() => _EditPageState();
 }
 
-class _EditPageState extends State<EditPage>
-    with SingleTickerProviderStateMixin {
+class _EditPageState extends State<EditPage> with SingleTickerProviderStateMixin {
   late CameraController _cameraController;
   bool _isCameraReady = false;
   bool _isLoading = false;
 
   Offset _elementPosition = const Offset(150, 300);
   double _elementScale = 1.0;
-  late String _element='';
+  late String _element = '';
   double _zoomLevel = 1.0;
   final double _minZoom = 1.0;
   final double _maxZoom = 4.0;
@@ -83,8 +82,8 @@ class _EditPageState extends State<EditPage>
   void _moveElement(Offset offset) {
     setState(() {
       _elementPosition = Offset(
-        _elementPosition.dx + offset.dx * 5,
-        _elementPosition.dy + offset.dy * 5,
+        _elementPosition.dx + offset.dx * 8,
+        _elementPosition.dy + offset.dy * 8,
       );
     });
   }
@@ -174,7 +173,7 @@ class _EditPageState extends State<EditPage>
     });
   }
 
-  Widget _buildRoundButton(String label,Function onTap) {
+  Widget _buildRoundButton(String label, Function onTap) {
     bool isSelected = _selectedButton == label;
 
     return Padding(
@@ -241,18 +240,23 @@ class _EditPageState extends State<EditPage>
                             if (!_isScanning)
                               Container(
                                 height: 50,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
+                                padding: const EdgeInsets.symmetric(vertical: 10),
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      _buildRoundButton('Info',()=>{}),
+                                      _buildRoundButton(
+                                          'Info',
+                                          () => {
+                                                setState(() {
+                                                  activeMap['info'] = !activeMap['info']!;
+                                                })
+                                              }),
                                       const SizedBox(width: 10),
-                                      _buildRoundButton('Practice',()=>{}),
+                                      _buildRoundButton('Practice', () => {}),
                                       const SizedBox(width: 10),
-                                      _buildRoundButton('...',()=>{}),
+                                      _buildRoundButton('...', () => {}),
                                     ],
                                   ),
                                 ),
@@ -260,41 +264,66 @@ class _EditPageState extends State<EditPage>
                             if (!_isScanning)
                               Container(
                                 height: 50,
-                                color:
-                                    Colors.grey.withAlpha((0.5 * 255).toInt()),
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
+                                color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+                                padding: const EdgeInsets.symmetric(vertical: 10),
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: ListView(
                                     scrollDirection: Axis.horizontal,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
                                     children: [
-                                      _buildRoundButton('Công tắc 1',()=>{setState(() {
-                                        _element = 'switch';
-                                      })}),
-                                      _buildRoundButton('Công tắc 2',()=>{setState(() {
-                                        _element = 'switch2';
-                                      })}),
-                                      _buildRoundButton('Công tắc 3',()=>{setState(() {
-                                        _element = 'switch3';
-                                      })}),
-                                      _buildRoundButton('Công tắc 4',()=>{setState(() {
-                                        _element = 'switch4';
-                                      })}),
-                                      _buildRoundButton('Knob',()=>{setState(() {
-                                        _element = 'knob';
-                                      })}),
-                                      _buildRoundButton('Ledid',()=>{setState(() {
-                                        _element = 'ledit';
-                                      })}),
-                                      _buildRoundButton('Meter',()=>{setState(() {
-                                        _element = 'meter';
-                                      })}),
-                                      _buildRoundButton('Bộ Điện Di',()=>{}),
-                                      _buildRoundButton('Tủ Mát',()=>{}),
-                                      _buildRoundButton('Tủ Thao Tác',()=>{}),
+                                      _buildRoundButton(
+                                          'Công tắc 1',
+                                          () => {
+                                                setState(() {
+                                                  _element = 'switch';
+                                                })
+                                              }),
+                                      _buildRoundButton(
+                                          'Công tắc 2',
+                                          () => {
+                                                setState(() {
+                                                  _element = 'switch2';
+                                                })
+                                              }),
+                                      _buildRoundButton(
+                                          'Công tắc 3',
+                                          () => {
+                                                setState(() {
+                                                  _element = 'switch3';
+                                                })
+                                              }),
+                                      _buildRoundButton(
+                                          'Công tắc 4',
+                                          () => {
+                                                setState(() {
+                                                  _element = 'switch4';
+                                                })
+                                              }),
+                                      _buildRoundButton(
+                                          'Knob',
+                                          () => {
+                                                setState(() {
+                                                  _element = 'knob';
+                                                })
+                                              }),
+                                      _buildRoundButton(
+                                          'Ledid',
+                                          () => {
+                                                setState(() {
+                                                  _element = 'ledit';
+                                                })
+                                              }),
+                                      _buildRoundButton(
+                                          'Meter',
+                                          () => {
+                                                setState(() {
+                                                  _element = 'meter';
+                                                })
+                                              }),
+                                      _buildRoundButton('Bộ Điện Di', () => {}),
+                                      _buildRoundButton('Tủ Mát', () => {}),
+                                      _buildRoundButton('Tủ Thao Tác', () => {}),
                                     ],
                                   ),
                                 ),
@@ -308,8 +337,7 @@ class _EditPageState extends State<EditPage>
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      icon: const Icon(Icons.arrow_back,
-                                          color: Colors.white),
+                                      icon: const Icon(Icons.arrow_back, color: Colors.white),
                                       label: const Text(
                                         'MÀN HÌNH CHÍNH',
                                         style: TextStyle(
@@ -319,14 +347,11 @@ class _EditPageState extends State<EditPage>
                                       ),
                                     )
                                   : Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10),
+                                      padding: const EdgeInsets.symmetric(vertical: 10),
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: Text(
-                                          _isScanning
-                                              ? 'ĐANG QUÉT'
-                                              : 'CHẾ ĐỘ CHỈNH SỬA',
+                                          _isScanning ? 'ĐANG QUÉT' : 'CHẾ ĐỘ CHỈNH SỬA',
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -361,8 +386,7 @@ class _EditPageState extends State<EditPage>
                                     isSelected: activeMap['location'] ?? false,
                                     onPress: () {
                                       setState(() {
-                                        activeMap['location'] =
-                                            !activeMap['location']!;
+                                        activeMap['location'] = !activeMap['location']!;
                                       });
                                     },
                                   ),
@@ -375,12 +399,8 @@ class _EditPageState extends State<EditPage>
                                           await _toggleCameraMode();
                                         },
                                         child: Icon(
-                                          _cameraMode
-                                              ? Icons.camera_alt
-                                              : Icons.camera,
-                                          color: _cameraMode
-                                              ? Colors.blue
-                                              : Colors.grey,
+                                          _cameraMode ? Icons.camera_alt : Icons.camera,
+                                          color: _cameraMode ? Colors.blue : Colors.grey,
                                           size: 30,
                                         ),
                                       ),
@@ -452,7 +472,7 @@ class _EditPageState extends State<EditPage>
                   Positioned(
                     left: _elementPosition.dx,
                     top: _elementPosition.dy,
-                    child: CustomElement(scale: _elementScale,element: _element),
+                    child: CustomElement(scale: _elementScale, element: _element, showInfo: activeMap['info'] ?? false),
                   ),
                   if (_editMode)
                     Positioned(
